@@ -2835,8 +2835,24 @@ tbody tr.highlight-row {
     gap: 10px;
 }
 
+/* ---- Mobile Sidebar Backdrop ---- */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 14, 26, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 95;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+.sidebar-backdrop.active {
+    display: block;
+    opacity: 1;
+}
+
 /* ============================================================
-   RESPONSIVE
+   RESPONSIVE DESIGN (DESKTOP -> TABLET -> MOBILE PHONE)
    ============================================================ */
 @media (max-width: 1200px) {
     .sim-controls-row { grid-template-columns: 1fr; }
@@ -2844,11 +2860,17 @@ tbody tr.highlight-row {
     .correction-flow { grid-template-columns: 1fr; }
     .methods-grid { grid-template-columns: repeat(2, 1fr); }
     .constellation-overview { grid-template-columns: repeat(2, 1fr); }
+    .arch-split-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 900px) {
+    /* Sidebar Mobile Drawer */
     .sidebar {
         transform: translateX(-100%);
+        z-index: 100;
+        width: 270px;
+        max-width: 82vw;
+        box-shadow: 4px 0 25px rgba(0, 0, 0, 0.7);
     }
     .sidebar.mobile-open {
         transform: translateX(0);
@@ -2857,45 +2879,320 @@ tbody tr.highlight-row {
         margin-left: 0;
     }
     .sidebar-toggle {
-        display: block;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
     }
-    .charts-grid {
-        grid-template-columns: 1fr;
-    }
-    .dashboard-bottom-grid {
-        grid-template-columns: 1fr;
-    }
-    .kpi-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .anomaly-overview-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .model-metrics {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .sim-results-row {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .telemetry-grid {
-        grid-template-columns: 1fr;
-    }
-    .analytics-kpi-row {
-        grid-template-columns: 1fr;
-    }
-    .prediction-comparison {
-        grid-template-columns: 1fr;
-    }
-    .constellation-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
+
+    /* Grids & Cards */
+    .charts-grid { grid-template-columns: 1fr; }
+    .dashboard-bottom-grid { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .anomaly-overview-grid { grid-template-columns: repeat(2, 1fr); }
+    .model-metrics { grid-template-columns: repeat(2, 1fr); }
+    .sim-results-row { grid-template-columns: repeat(2, 1fr); }
+    .telemetry-grid { grid-template-columns: 1fr; }
+    .analytics-kpi-row { grid-template-columns: 1fr; }
+    .prediction-comparison { grid-template-columns: 1fr; }
+    .constellation-grid { grid-template-columns: repeat(3, 1fr); }
+    .risk-cards-grid { grid-template-columns: 1fr; }
+    .sandbox-layout { grid-template-columns: 1fr; }
+    .impact-sectors-grid { grid-template-columns: 1fr; }
+    .impact-metrics-banner { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 600px) {
-    .kpi-grid { grid-template-columns: 1fr; }
-    .anomaly-overview-grid { grid-template-columns: 1fr; }
-    .methods-grid { grid-template-columns: 1fr; }
-    .page-container { padding: 12px; }
-    .pipeline { flex-wrap: wrap; justify-content: center; }
-    .constellation-overview { grid-template-columns: 1fr; }
+    /* Top Bar Phone Layout */
+    .top-bar {
+        padding: 6px 12px;
+        min-height: 54px;
+        height: auto;
+    }
+    .top-bar-left {
+        gap: 8px;
+        flex: 1;
+        min-width: 0;
+    }
+    .page-title {
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 140px;
+    }
+    .page-subtitle {
+        display: none;
+    }
+    .top-bar-right {
+        gap: 6px;
+    }
+    .btn-demo-glow {
+        padding: 4px 8px;
+        font-size: 0.68rem;
+        gap: 3px;
+    }
+    .live-clock {
+        padding: 4px 7px;
+        font-size: 0.68rem;
+    }
+    .live-clock .clock-time {
+        font-size: 0.65rem;
+    }
+
+    /* Page Container Phone Spacing */
+    .page-container {
+        padding: 10px 8px;
+    }
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    .kpi-card {
+        padding: 10px;
+        gap: 8px;
+    }
+    .kpi-value {
+        font-size: 1.15rem;
+    }
+    .kpi-label {
+        font-size: 0.65rem;
+    }
+    .constellation-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        padding: 8px;
+    }
+
+    /* Chart Heights for Phone */
+    .chart-body {
+        height: 210px;
+    }
+    .chart-body.tall {
+        height: 250px;
+    }
+    .chart-header {
+        padding: 12px 14px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .chart-header h3 {
+        font-size: 0.88rem;
+    }
+    .sim-legend {
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 0.68rem;
+    }
+
+    /* Simulation View on Phone */
+    .sim-form {
+        padding: 14px;
+    }
+    .clock-tech-table {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .rel-stats {
+        flex-direction: column;
+        gap: 6px;
+    }
+    .methods-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    /* Architecture & Risks View on Phone */
+    .arch-hero-banner, .risks-hero-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px;
+    }
+    .arch-hero-text h2, .risks-hero-text h2 {
+        font-size: 1.1rem;
+    }
+    .arch-quick-specs {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    .risks-badges {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .full-pipeline-grid {
+        padding: 14px 6px;
+        gap: 6px;
+        -webkit-overflow-scrolling: touch;
+    }
+    .fp-card {
+        min-width: 135px;
+        padding: 10px;
+    }
+    .fp-arrow {
+        display: none;
+    }
+    .spec-row-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    .spec-chip {
+        margin-left: 0;
+        align-self: flex-start;
+    }
+    .formula-box code {
+        font-size: 0.72rem;
+        word-break: break-all;
+    }
+    .calc-body {
+        padding: 12px;
+    }
+    .monitor-status-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        font-size: 0.65rem;
+        padding: 8px 10px;
+    }
+    .monitor-console {
+        height: 140px;
+        font-size: 0.65rem;
+        padding: 8px 10px;
+    }
+    .sandbox-layout {
+        padding: 12px;
+        gap: 12px;
+    }
+    .sandbox-btn-group .btn-hazard {
+        padding: 10px;
+        font-size: 0.72rem;
+    }
+
+    /* Benchmarks & Impact on Phone */
+    .benchmarks-table-wrapper {
+        padding: 6px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .benchmarks-table {
+        min-width: 480px;
+        font-size: 0.72rem;
+    }
+    .benchmarks-table th, .benchmarks-table td {
+        padding: 8px 6px;
+    }
+    .impact-metrics-banner {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        padding: 10px;
+    }
+    .imb-item {
+        padding: 8px 4px;
+    }
+    .imb-val {
+        font-size: 1.15rem;
+    }
+    .imb-lbl {
+        font-size: 0.65rem;
+    }
+    .impact-sectors-grid {
+        padding: 10px;
+        gap: 10px;
+    }
+    .impact-sector-box {
+        padding: 12px;
+    }
+
+    /* Demo Modal Phone Overrides */
+    .demo-modal-content {
+        width: 95%;
+        max-height: 90vh;
+        overflow-y: auto;
+        border-radius: var(--radius-md);
+    }
+    .demo-modal-header {
+        padding: 10px 14px;
+    }
+    .dm-title-row h2 {
+        font-size: 0.95rem;
+    }
+    .demo-stepper {
+        padding: 8px 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+    .demo-step {
+        gap: 4px;
+    }
+    .ds-num {
+        width: 20px;
+        height: 20px;
+        font-size: 0.6rem;
+    }
+    .ds-text {
+        font-size: 0.6rem;
+    }
+    .demo-step-line {
+        min-width: 6px;
+        margin: 0 4px;
+    }
+    .demo-stage-body {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 10px 12px;
+    }
+    .demo-stage-visual {
+        padding: 10px;
+    }
+    .demo-stage-explanation {
+        padding: 12px;
+    }
+    .demo-stage-explanation h3 {
+        font-size: 0.88rem;
+    }
+    .demo-stage-explanation p {
+        font-size: 0.75rem;
+    }
+    .demo-modal-footer {
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px 12px;
+        align-items: stretch;
+    }
+    .demo-action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        width: 100%;
+    }
+    .demo-action-buttons .btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        padding: 8px;
+    }
+
+    /* Notification Panel Full Width on Phone */
+    .notification-panel {
+        width: 100vw;
+        right: -100vw;
+    }
+}
+
+@media (max-width: 400px) {
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+    .impact-metrics-banner {
+        grid-template-columns: 1fr;
+    }
+    .constellation-grid {
+        grid-template-columns: 1fr;
+    }
+    .page-title {
+        max-width: 100px;
+    }
 }

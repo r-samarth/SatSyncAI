@@ -178,9 +178,11 @@ const App = {
 
         // Close sidebar on mobile
         const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sidebar-backdrop');
         if (sidebar && sidebar.classList.contains('mobile-open')) {
             sidebar.classList.remove('mobile-open');
         }
+        if (backdrop) backdrop.classList.remove('active');
 
         // Update Header Titles
         const pageTitles = {
@@ -267,16 +269,30 @@ const App = {
         const toggleBtn = document.getElementById('sidebar-toggle');
         const sidebar = document.getElementById('sidebar');
         const main = document.getElementById('main-content');
+        const backdrop = document.getElementById('sidebar-backdrop');
+
+        const closeMobileDrawer = () => {
+            if (sidebar) sidebar.classList.remove('mobile-open');
+            if (backdrop) backdrop.classList.remove('active');
+        };
 
         if (toggleBtn && sidebar) {
             toggleBtn.addEventListener('click', () => {
                 if (window.innerWidth <= 900) {
-                    sidebar.classList.toggle('mobile-open');
+                    const isOpen = sidebar.classList.toggle('mobile-open');
+                    if (backdrop) {
+                        if (isOpen) backdrop.classList.add('active');
+                        else backdrop.classList.remove('active');
+                    }
                 } else {
                     sidebar.classList.toggle('collapsed');
                     if (main) main.classList.toggle('sidebar-collapsed');
                 }
             });
+        }
+
+        if (backdrop) {
+            backdrop.addEventListener('click', closeMobileDrawer);
         }
     },
 
