@@ -207,6 +207,11 @@ const App = {
 
         // Trigger page-specific chart renderings
         this.onPageOpened(pageId);
+
+        // Vercel Web Analytics route tracking
+        if (typeof window.va === 'function') {
+            window.va('event', { name: `view_${pageId}` });
+        }
     },
 
     onPageOpened(pageId) {
@@ -911,6 +916,9 @@ const App = {
                 this.state.demo.currentStep = 1;
                 this.renderDemoStep(1);
                 this.startDemoTimer();
+                if (typeof window.va === 'function') {
+                    window.va('event', { name: 'launch_live_demo' });
+                }
             });
         }
 
